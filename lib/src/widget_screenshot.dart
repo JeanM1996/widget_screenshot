@@ -107,15 +107,12 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
         if (_canScroll(scrollController)) {
           double scrollHeight = scrollController.offset + sHeight / 10;
 
-          if (scrollHeight >
-              scrollController.position.maxScrollExtent -
-                  pixelsBoundaryBottom) {
+          if (scrollHeight > scrollController.position.maxScrollExtent) {
             lastImageHeight = scrollController.position.maxScrollExtent +
                 sHeight -
                 sHeight * i;
 
-            scrollController.jumpTo(scrollController.position.maxScrollExtent -
-                pixelsBoundaryBottom);
+            scrollController.jumpTo(scrollController.position.maxScrollExtent);
             await Future.delayed(const Duration(milliseconds: 16));
 
             Uint8List lastImage = await _screenshot(pixelRatio);
