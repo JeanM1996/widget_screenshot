@@ -179,12 +179,13 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
         quality: quality,
         imageParams: imageParams);
 
-    resultImage = await _merge(canScroll, mergeParam);
+    resultImage = await _merge(canScroll, mergeParam, pixelsBoundaryBottom);
 
     return resultImage;
   }
 
-  Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
+  Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam,
+      double pixelsBoundaryBottom) async {
     if (canScroll) {
       return ImageMerger.merge(mergeParam);
     } else {
@@ -201,6 +202,20 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
 
       for (var element in mergeParam.imageParams) {
         ui.Image img = await decodeImageFromList(element.image);
+        //last image reduce pixelsBoundaryBottom pixels
+        if (pixelsBoundaryBottom != 0) {
+          var index = mergeParam.imageParams.indexOf(element);
+          if (index == mergeParam.imageParams.length - 1) {
+            canvas.drawImageRect(
+                img,
+                Rect.fromLTWH(0, 0, img.width.toDouble(),
+                    img.height.toDouble() - pixelsBoundaryBottom),
+                Rect.fromLTWH(element.offset.dx, element.offset.dy,
+                    element.size.width, element.size.height),
+                paint);
+            continue;
+          }
+        }
 
         canvas.drawImage(img, element.offset, paint);
       }
