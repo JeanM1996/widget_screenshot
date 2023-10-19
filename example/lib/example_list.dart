@@ -33,7 +33,7 @@ class _ExampleListPageState extends State<ExampleListPage> {
                     scrollController: _scrollController,
                     backgroundColor: Colors.white,
                     format: ShotFormat.png,
-                    pixelsBoundaryBottom: 0,
+                    pixelsBoundaryBottom: 120,
                     pixelRatio: 1);
 
                 try {
@@ -51,6 +51,28 @@ class _ExampleListPageState extends State<ExampleListPage> {
                   }
                   await file.writeAsBytes(resultImage!);
                   debugPrint("result = ${file.path}");
+                  //show modal bottom sheet
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                //here the image
+                                Image.memory(
+                                  resultImage,
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("确定"))
+                              ],
+                            ),
+                          ),
+                        );
+                      });
                 } catch (error) {
                   /// flutter保存图片到App内存文件夹出错
                   debugPrint("error = $error");

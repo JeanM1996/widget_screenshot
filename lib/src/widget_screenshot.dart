@@ -202,28 +202,20 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
 
       for (var element in mergeParam.imageParams) {
         ui.Image img = await decodeImageFromList(element.image);
-        //last image reduce pixelsBoundaryBottom pixels
-        if (pixelsBoundaryBottom != 0) {
-          var index = mergeParam.imageParams.indexOf(element);
-          if (index == mergeParam.imageParams.length - 1) {
-            canvas.drawImageRect(
-                img,
-                Rect.fromLTWH(0, 0, img.width.toDouble(),
-                    img.height.toDouble() - pixelsBoundaryBottom),
-                Rect.fromLTWH(element.offset.dx, element.offset.dy,
-                    element.size.width, element.size.height),
-                paint);
-            continue;
-          }
-        }
+        //last image reduce pixelsBoundaryBottom
 
         canvas.drawImage(img, element.offset, paint);
       }
+      //crop the pixelsBoundaryBottom from bottom of the image
+      canvas.clipRect(Rect.fromLTWH(0, 0, mergeParam.size.width,
+          mergeParam.size.height - pixelsBoundaryBottom));
 
       Picture picture = pictureRecorder.endRecording();
+      //cut the pixelsBoundaryBottom from bottom of the image
 
       ui.Image rImage = await picture.toImage(
           mergeParam.size.width.ceil(), mergeParam.size.height.ceil());
+
       ByteData? byteData =
           await rImage.toByteData(format: ui.ImageByteFormat.png);
       return byteData!.buffer.asUint8List();
