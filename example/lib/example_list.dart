@@ -12,9 +12,9 @@ class ExampleListPage extends StatefulWidget {
 }
 
 class _ExampleListPageState extends State<ExampleListPage> {
-  GlobalKey _shotKey = GlobalKey();
+  final GlobalKey _shotKey = GlobalKey();
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,13 @@ class _ExampleListPageState extends State<ExampleListPage> {
           TextButton(
               onPressed: () async {
                 WidgetShotRenderRepaintBoundary repaintBoundary =
-                    _shotKey.currentContext!.findRenderObject() as WidgetShotRenderRepaintBoundary;
+                    _shotKey.currentContext!.findRenderObject()
+                        as WidgetShotRenderRepaintBoundary;
                 var resultImage = await repaintBoundary.screenshot(
                     scrollController: _scrollController,
                     backgroundColor: Colors.white,
                     format: ShotFormat.png,
+                    pixelsBoundaryBottom: 0,
                     pixelRatio: 1);
 
                 try {
@@ -51,7 +53,7 @@ class _ExampleListPageState extends State<ExampleListPage> {
                   debugPrint("result = ${file.path}");
                 } catch (error) {
                   /// flutter保存图片到App内存文件夹出错
-                  debugPrint("error = ${error}");
+                  debugPrint("error = $error");
                 }
               },
               child: const Text(
@@ -65,13 +67,13 @@ class _ExampleListPageState extends State<ExampleListPage> {
         child: ListView.separated(
             controller: _scrollController,
             itemBuilder: (context, index) {
-              return Container(
+              return SizedBox(
                 // color: Color.fromARGB(
                 //     Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), Random().nextInt(255)),
                 height: 160,
                 child: Center(
                   child: Text(
-                    "测试文案测试文案测试文案测试文案 ${index}",
+                    "测试文案测试文案测试文案测试文案 $index",
                     style: const TextStyle(fontSize: 32),
                   ),
                 ),
