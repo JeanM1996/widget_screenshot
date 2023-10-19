@@ -39,6 +39,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
     Color? backgroundColor,
     ShotFormat format = ShotFormat.png,
     int quality = 100,
+    double pixelsBoundaryBottom = 0,
   }) async {
     pixelRatio ??= window.devicePixelRatio;
     if (quality > 100) {
@@ -111,7 +112,8 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
                 sHeight -
                 sHeight * i;
 
-            scrollController.jumpTo(scrollController.position.maxScrollExtent);
+            scrollController.jumpTo(scrollController.position.maxScrollExtent -
+                pixelsBoundaryBottom);
             await Future.delayed(const Duration(milliseconds: 16));
 
             Uint8List lastImage = await _screenshot(pixelRatio);
