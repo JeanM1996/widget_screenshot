@@ -107,7 +107,9 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
         if (_canScroll(scrollController)) {
           double scrollHeight = scrollController.offset + sHeight / 10;
 
-          if (scrollHeight > scrollController.position.maxScrollExtent) {
+          if (scrollHeight >
+              scrollController.position.maxScrollExtent -
+                  pixelsBoundaryBottom) {
             lastImageHeight = scrollController.position.maxScrollExtent +
                 sHeight -
                 sHeight * i;
